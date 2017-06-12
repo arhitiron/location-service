@@ -9,9 +9,9 @@ import (
 // Configuration options using environment variables
 var (
 	address = envflag.String("ADDRESS", ":8000", "")
-	broker  = envflag.String("KAFKA_BROKER", "localhost:9092", "Elasticsearch index")
-	retries = envflag.Int("KAFKA_PRODUCER_MAX_RETRY", 5, "Elasticsearch index")
-	topic   = envflag.String("KAFKA_TOPIC", "location", "Elasticsearch index")
+	broker  = envflag.String("KAFKA_BROKER", "localhost:9092", "")
+	retries = envflag.Int("KAFKA_PRODUCER_MAX_RETRY", 5, "")
+	topic   = envflag.String("KAFKA_TOPIC", "location", "")
 )
 
 func main() {
