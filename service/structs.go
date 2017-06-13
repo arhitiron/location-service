@@ -1,8 +1,8 @@
 package service
 
 type LocationRequest struct {
-	Latitude  string
-	Longitude string
-	User      string
-	Created   int64
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
+	User      string `json:"user"`
+	Created   int64  `json:"created"`
 }

@@ -4,6 +4,7 @@ import (
 	"gitlab.antyron.com/ITStudWay2017/location-service/service"
 	"gitlab.antyron.com/ITStudWay2017/location-service/server"
 	"github.com/ianschenck/envflag"
+	"log"
 )
 
 // Configuration options using environment variables
@@ -23,5 +24,7 @@ func main() {
 		panic(err)
 	}
 	srv := server.NewServer(*address, messageBroker)
+
+	log.Printf("\n\n Server started on %s \n\n ", *address)
 	srv.Handle()
 }

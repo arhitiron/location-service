@@ -33,3 +33,19 @@ Defaults to `5`.
 The Kafka topic for messages.
 
 Defaults to `location`.
+
+
+## Request example
+
+### Send location to the queue
+```
+    curl -X POST \
+      http://localhost:8000/location \
+      -H 'content-type: application/json' \
+      -d '{
+      "latitude": "10",
+      "longitude": "10",
+      "user": "test",
+      "created": 101010110
+    }'
+```
