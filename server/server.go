@@ -1,12 +1,32 @@
 package server
 
 import (
-	"net/http"
 	"encoding/json"
 	"log"
-	"gitlab.antyron.com/ITStudWay2017/location-service/service"
 	"fmt"
+	"net/http"
+
+	"gitlab.antyron.com/ITStudWay2017/location-service/service"
 )
+
+const (
+	OK_MESSAGE          = "location added to queue"
+	CONTENT_TYPE_HEADER = "Content-Type"
+	APPLICATION_JSON    = "application/json"
+)
+
+var OkResponse string
+
+func init() {
+	res, err := json.Marshal(struct {
+		Message string
+	}{Message: OK_MESSAGE})
+
+	if err != nil {
+		panic(err)
+	}
+	OkResponse = string(res)
+}
 
 type Server interface {
 	Handle()
@@ -32,27 +52,16 @@ func (h *simpleServer) main(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *simpleServer) updateLocation(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: request updateLocation")
-	decoder := json.NewDecoder(r.Body)
-	var req service.LocationRequest
-	err := decoder.Decode(&req)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Printf("DEBUG: request %v", req)
-	defer r.Body.Close()
-	go h.messageBroker.Send(req)
-
-	sendJsonResponse(struct {
-		Message string
-	}{Message: "location added to queue"}, w)
-}
-
-func sendJsonResponse(obj interface{}, w http.ResponseWriter) {
-	res, err := json.Marshal(obj)
-	if err != nil {
-		fmt.Fprint(w, "error: %v", res)
-	}
-	w.Header().Add("Content-Type", "application/json")
-	fmt.Fprint(w, string(res))
+	w.Header().Add(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+	fmt.Fprint(w, OkResponse)
+	go func(r *http.Request) {
+		decoder := json.NewDecoder(r.Body)
+		var req service.LocationRequest
+		err := decoder.Decode(&req)
+		if err != nil {
+			log.Println(err)
+		}
+		defer r.Body.Close()
+		h.messageBroker.Send(req)
+	}(r)
 }

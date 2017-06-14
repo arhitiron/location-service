@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/Shopify/sarama"
 	"encoding/json"
+	"github.com/Shopify/sarama"
 	"log"
 )
 
