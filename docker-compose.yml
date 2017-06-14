@@ -16,45 +16,54 @@ services:
     links:
       - kafka
 
-#  elasticsearch:
-#    image: elasticsearch:5.2.2
-#    ports:
-#      - "9200:9200"
-#    environment:
-#      - "xpack.security.enabled=false"
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#    volumes:
-#      - /mnt/data/location-esdata:/usr/share/elasticsearch/data
-#
-#  kibana:
-#    image: kibana:5.2.2
-#    ports:
-#      - "5601:5601"
-#    environment:
-#      - "xpack.security.enabled=false"
-#    depends_on:
-#      elasticsearch:
-#        condition: service_healthy
-#
-#  logstash:
-#    image: logstash:5.2.2
-#    ports:
-#      - "25826:25826"
-#    volumes:
-#      - ./elk-config:/elk-config
-#    command: logstash -f /elk-config/logstash.config
-#    depends_on:
-#      elasticsearch:
-#        condition: service_healthy
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
+  elasticsearch:
+    image: elasticsearch:5.2.2
+    ports:
+      - "9200:9200"
+    environment:
+      - "xpack.security.enabled=false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - /mnt/data/location-esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: kibana:5.2.2
+    ports:
+      - "5601:5601"
+    environment:
+      - "xpack.security.enabled=false"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  logstash:
+    image: logstash:5.2.2
+    ports:
+      - "25826:25826"
+    volumes:
+      - ./elk-config:/elk-config
+    command: logstash -f /elk-config/logstash.config
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=location
+      - ELASTIC_HOST=elasticsearch
+    links:
+      - kafka
+      - elasticsearch
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # Maintains configuration information for kafka
   zookeeper:
