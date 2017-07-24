@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/ianschenck/envflag"
-	"gitlab.antyron.com/ITStudWay2017/location-service/server"
-	"gitlab.antyron.com/ITStudWay2017/location-service/service"
+	"github.com/arhitiron/location-service/server"
+	"github.com/arhitiron/location-service/service"
 	"log"
 )
 
