@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"gitlab.antyron.com/ITStudWay2017/location-service/service"
+	"github.com/arhitiron/location-service/service"
 )
 
 const (
